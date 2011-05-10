@@ -1,0 +1,5 @@
+title = "Our First Post"
+date = "Tuesday, September 21, 2010 at 1:09 PM"
+updated = "Friday, May 6, 2011 at 11:09 AM"
+summary = "This field will end up in our feed's summary."
+intro = "<p>Nam urna sapien, tincidunt a elementum sit amet, tristique sed augue. Donec eu urna eget dui condimentum lobortis a sit amet ligula. Nam nec cursus nibh. Duis sem lectus, lacinia fringilla sagittis nec, faucibus sodales ipsum.</p>"

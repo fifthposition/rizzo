@@ -1,0 +1,5 @@
+title = "Another Post, But Longer, And With A Proportionally Long Title, Being, This Time Around, About Lorem And Ipsum"
+date = "Saturday, May 7, 2011 at 2:49 PM"
+updated = "Saturday, May 7, 2011 at 2:49 PM"
+summary = "This be an summary for our feed."
+intro = "<p>Pellentesque a tellus sit amet eros vulputate tincidunt nec in lacus. Duis sem <em>lectus</em>, lacinia fringilla sagittis nec, faucibus sodales ipsum. Quisque interdum adipiscing ligula sit amet auctor. Nulla molestie tortor ut leo feugiat non faucibus neque auctor. <strong>Proin massa urna, euismod ut dignissim a, ullamcorper eu arcu.</strong></p>"
