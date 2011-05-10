@@ -1,0 +1,5 @@
+Rizzo is:
+
+* A static site generator
+* Written in "Groovy":http://groovy.codehaus.org/
+* Awaiting your learned opinion
