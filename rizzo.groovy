@@ -11,6 +11,8 @@ class Post{
 }
 
 def posts = []
+def siteConfig = new ConfigSlurper().parse(new File("site-config.groovy").toURL())
+println siteConfig
 
 def begin = "posts/"; def end = "published/"; def h_begin = "pages/"
 
@@ -118,14 +120,14 @@ new File("${end}/feed/").mkdirs()
 
 def feed = new File("${end}/feed/index.xml").write("""<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <id>http://website.com/feed/</id>
-  <title>Lorem Ipsum</title>
+  <id>http://${siteConfig.site.domain}/feed/</id>
+  <title>${siteConfig.site.name}</title>
   <updated>${sdf.format(new Date())}</updated>
-  <link rel="self" href="http://website.com/feed/" type="application/atom+xml" />
+  <link rel="self" href="http://${siteConfig.site.domain}/feed/" type="application/atom+xml" />
   <author>
-    <name>Your Name</name>
-    <uri>http://website.com</uri>
-    <email>your@email.com</email>
+    <name>${siteConfig.author.name}</name>
+    <uri>http://${siteConfig.site.domain}</uri>
+    <email>${siteConfig.author.email}</email>
   </author>""")
 
 max = posts.size() > 20 ? 19 : posts.size() - 1
@@ -134,14 +136,14 @@ posts[0..max].each { currentPost ->
     def itemDate = sdf.format(currentPost.dateCreated); def itemUpdatedDate = sdf.format(currentPost.lastUpdated)
     SimpleDateFormat itemIdDateFormatter = new SimpleDateFormat("yyyy-MM-dd")
     def itemIdDate = itemIdDateFormatter.format(currentPost.dateCreated)
-    def itemId = "tag:website.com,${itemIdDate}:/${currentPost.name}/"
+    def itemId = "tag:${siteConfig.site.domain},${itemIdDate}:/${currentPost.name}/"
     def feed_item = """
 	<entry>
 	    <title>${currentPost.title}</title>
 	    <id>${itemId}</id>
 	    <published>${itemDate}</published>
 	    <updated>${itemUpdatedDate}</updated>
-	    <link href="http://website.com/${currentPost.name}/"/>
+	    <link href="http://${siteConfig.site.domain}/${currentPost.name}/"/>
 	    <summary>${currentPost.summary}</summary>
 	    <content type="html">${currentPost.content.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}
 	    </content>
