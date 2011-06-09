@@ -46,11 +46,10 @@ if(!opt){
 	    pageText = pageText[2..-1]
 		currentPost.content = pageText.join("\n")
 		if(currentPost.lastUpdated > lastPublished || !sourceExists){
-            File index = new File("${opt.d}/${name}.html")
 			def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "siteName" : siteConfig.site.name, "content" : currentPost.content, "authorName" : siteConfig.author.name, "lastUpdated" : """
 			<br />
 	        <p style="font-size:smaller; text-align:right;">(Updated ${formatter.format(currentPost.lastUpdated)})</p>"""]
-			index.write("${fozziwig.createTemplate(page).make(scrooge)}")
+			new File("${opt.d}/${name}.html").write("${fozziwig.createTemplate(page).make(scrooge)}")
         }
     }
     new File("${begin}").eachFileMatch(~/.*\.html/){ file ->
@@ -79,9 +78,8 @@ if(!opt){
             }
         }
         if(currentPost.lastUpdated > lastPublished || !sourceExists){
-            File index = new File("${opt.d}/archives/${currentPost.name}.html")
             def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : formatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name]
-            index.write("${fozziwig.createTemplate(post).make(scrooge)}")
+            new File("${opt.d}/archives/${currentPost.name}.html").write("${fozziwig.createTemplate(post).make(scrooge)}")
         }
     }
     def gonzo = new AntBuilder()
@@ -96,7 +94,6 @@ if(!opt){
     new File("${opt.d}/tags/").mkdirs()
     tags.each{ tag ->
 	    tag.posts = tag.posts.sort{ it.dateCreated }.reverse()
-        File index = new File("${opt.d}/tags/${tag.name}.html")
         String tagMid = """
 	             <p></p>
 	             <table>
@@ -108,26 +105,26 @@ if(!opt){
 	                     <td valign="top"><a href="/${currentPost.name}/">${currentPost.title}</a></td>
 	                 </tr>
 	    	"""
-	    tagMid += """
+	    }
+		tagMid += """
 	             </table>
 	    """
 	
 	    def dickens = ["postTitle" : "Archives for &ldquo;${tag.name}&rdquo;", "postName" : tag.name, "siteName" : siteConfig.site.name, "postUpdate" : "", "authorName" : siteConfig.author.name, "content" : tagMid]
 	
-        index.write("${fozziwig.createTemplate(page).make(dickens)}")
+        new File("${opt.d}/tags/${tag.name}.html").write("${fozziwig.createTemplate(page).make(dickens)}")
         
         def max = tag.posts.size() > 20 ? 19 : tag.posts.size() - 1
 		def tagFeed = new File("${opt.d}/tags/${tag.name}.xml")
 		String entries = ""
-		def itemIdDate = itemIdDateFormatter.format(currentPost.dateCreated)
 		tag.posts[0..max].each { cp ->
+		        def itemIdDate = itemIdDateFormatter.format(cp.dateCreated)
 			    def cratchit = ["postTitle" : cp.title, "postLink" : "http://${siteConfig.site.domain}/archives/${cp.name}.html", "postSummary" : cp.summary, "postContent" : cp.content, "itemId" : "tag:${siteConfig.site.domain},${itemIdDate}:/${cp.name}/", "itemDate" : feedFormatter.format(cp.dateCreated), "itemUpdatedDate" : feedFormatter.format(cp.lastUpdated)]
                 entries += "${fozziwig.createTemplate(entry).make(cratchit)}"
 		}
 		def tim = ["siteDomain" : siteConfig.site.domain, "feedUrl" : "http://${siteConfig.site.domain}/tags/${tag.name}.xml", "tagName" : tag.name, "feedTitle" : "${siteConfig.site.name} : ${tag.name}", "siteName" : siteConfig.site.name, "lastUpdated" : feedFormatter.format(new Date()), "authorName" : siteConfig.author.name, "authorEmail" : siteConfig.author.email, "entries" : entries]
 		tagFeed.write("${fozziwig.createTemplate(feed).make(tim)}")
     }
-}
     posts = posts.sort{ it.dateCreated }.reverse()
     File rootIndex = new File("${opt.d}/index.html")
     String homeContent = ""
@@ -147,7 +144,8 @@ if(!opt){
     String tagList = "<p>"
     tagList += tags.sort{it.name}.collect{"<a href=\"/${it.name}/\">${it.name}</a>&nbsp;(${it.posts.size()})"}.join(" &nbsp; &nbsp; ")
     tagList += "</p>"
-    def thingsNSuch = ["postTitle" : "Tags", "postName" : "tags", "siteName" : siteConfig.site.name, "postUpdate" : "", "content" : tagList]
+    def thingsNSuch = ["postTitle" : "Tags", "postName" : "tags", "siteName" : siteConfig.site.name, "authorName" : siteConfig.author.name, "postUpdate" : "", "content" : tagList]
+    new File("${opt.d}/tags/index.html").write("${fozziwig.createTemplate(page).make(thingsNSuch)}")
     new File("${opt.d}/archives/").mkdirs()
     File arcIndex = new File("${opt.d}/archives/index.html")
     String archiveContent = "<table>"
