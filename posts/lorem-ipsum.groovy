@@ -1,5 +1,0 @@
-title = "Lorem Ipsum"
-date = "Wednesday, May 4, 2011 at 3:49 PM"
-updated = "Wednesday, May 4, 2011 at 3:49 PM"
-summary = "And this is an Atom summary."
-intro = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tellus felis, mattis in elementum vitae, hendrerit quis libero. Curabitur a enim augue.</p>"
