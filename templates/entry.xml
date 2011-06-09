@@ -1,0 +1,11 @@
+<entry>
+    <title>$postTitle</title>
+    <id>$itemId</id>
+    <published>$itemDate</published>
+    <updated>$itemUpdatedDate</updated>
+    <link href="$postLink"/>
+    <summary>$postSummary</summary>
+    <content type="html">
+	    $postContent
+    </content>
+</entry>
