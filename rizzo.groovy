@@ -140,7 +140,6 @@ if(!opt){
     }
     def fred = ["siteName" : siteConfig.site.name, "content" : homeContent, "authorName" : siteConfig.author.name]
     rootIndex.write("${fozziwig.createTemplate(home).make(fred)}")
-    File tagIndex = new File("${opt.d}/tags.html")
     String tagList = "<p>"
     tagList += tags.sort{it.name}.collect{"<a href=\"/${it.name}/\">${it.name}</a>&nbsp;(${it.posts.size()})"}.join(" &nbsp; &nbsp; ")
     tagList += "</p>"
