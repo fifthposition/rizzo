@@ -1,1 +1,1 @@
-Rizzo is a "Groovy":http://groovy.codehaus.org/ script for static site generation. There is "explanation to be had on the wiki":https://github.com/fifthposition/rizzo/wiki.
+Rizzo is a "Groovy":http://groovy.codehaus.org/ script for static site generation. In case you perchance seek an example: My own site, "(incoherencies)":http://incoherencies.net/, is built by Rizzo. There is "explanation to be had on the wiki":https://github.com/fifthposition/rizzo/wiki.
