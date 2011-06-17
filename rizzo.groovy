@@ -103,7 +103,7 @@ if(!opt){
 	    	tagMid += """
 				     <tr>
 	                     <td valign="top" class="date"><span class="arc_date">${archiveFormatter.format(currentPost.dateCreated)}</span></td>
-	                     <td valign="top"><a href="/${currentPost.name}/">${currentPost.title}</a></td>
+	                     <td valign="top"><a href="/archives/${currentPost.name}.html">${currentPost.title}</a></td>
 	                 </tr>
 	    	"""
 	    }
@@ -136,25 +136,24 @@ if(!opt){
             postTags = "; "
             postTags += currentPost.tags.sort{it.name}.collect{"<a href=\"/${it.name}/\">${it.name}</a>"}.join(", ")
         }
-        def pd = ["postTitle" : currentPost.title, "postLink" : "http://${siteConfig.site.domain}/archives/${currentPost.name}.html", "postDate" : formatter.format(currentPost.dateCreated), "postTags" : postTags ?: "", "content" : currentPost.content]
+        def pd = ["postTitle" : currentPost.title, "postLink" : "http://${siteConfig.site.domain}/archives/${currentPost.name}.html", "postDate" : outputFormatter.format(currentPost.dateCreated), "postTags" : postTags ?: "", "content" : currentPost.content]
         homeContent += fozziwig.createTemplate(home_mid).make(pd)
     }
     def fred = ["siteName" : siteConfig.site.name, "content" : homeContent, "authorName" : siteConfig.author.name]
     rootIndex.write("${fozziwig.createTemplate(home).make(fred)}")
-    File tagIndex = new File("${opt.d}/tags.html")
     String tagList = "<p>"
     tagList += tags.sort{it.name}.collect{"<a href=\"/${it.name}/\">${it.name}</a>&nbsp;(${it.posts.size()})"}.join(" &nbsp; &nbsp; ")
     tagList += "</p>"
     def thingsNSuch = ["postTitle" : "Tags", "postName" : "tags", "siteName" : siteConfig.site.name, "authorName" : siteConfig.author.name, "postUpdate" : "", "content" : tagList]
-    new File("${opt.d}/tags/index.html").write("${fozziwig.createTemplate(page).make(thingsNSuch)}")
+    new File("${opt.d}/tags.html").write("${fozziwig.createTemplate(page).make(thingsNSuch)}")
     new File("${opt.d}/archives/").mkdirs()
-    File arcIndex = new File("${opt.d}/archives/index.html")
+    File arcIndex = new File("${opt.d}/archives.html")
     String archiveContent = "<table>"
     posts.each { currentPost ->
     	archiveContent += """
 			     <tr>
                      <td valign="top" class="date"><span class="arc_date">${archiveFormatter.format(currentPost.dateCreated)}</span></td>
-                     <td valign="top"><a href="/${currentPost.name}/">${currentPost.title}</a></td>
+                     <td valign="top"><a href="/archives/${currentPost.name}.html">${currentPost.title}</a></td>
                  </tr>
     	"""
     }
@@ -169,7 +168,7 @@ if(!opt){
     String feedEntries = ""
 	posts[0..max].each { currentPost ->
 		def itemIdDate = itemIdDateFormatter.format(currentPost.dateCreated)
-		def cratchit = ["postTitle" : currentPost.title, "postSummary" : currentPost.summary, "postContent" : currentPost.content, "itemId" : "tag:${siteConfig.site.domain},${itemIdDate}:/${currentPost.name}/", "postLink" : "http://${siteConfig.site.domain}/archives/${currentPost.name}.html", "itemDate" : feedFormatter.format(currentPost.dateCreated), "itemUpdatedDate" : feedFormatter.format(currentPost.lastUpdated)]
+		def cratchit = ["postTitle" : currentPost.title, "postSummary" : currentPost.summary, "postContent" : currentPost.content, "itemId" : "tag:${siteConfig.site.domain},${itemIdDate}:/archives/${currentPost.name}.html", "postLink" : "http://${siteConfig.site.domain}/archives/${currentPost.name}.html", "itemDate" : feedFormatter.format(currentPost.dateCreated), "itemUpdatedDate" : feedFormatter.format(currentPost.lastUpdated)]
         feedEntries += "${fozziwig.createTemplate(entry).make(cratchit)}"
     }
     def feedBits = ["feedUrl" : "http://${siteConfig.site.domain}/feed.xml", "feedTitle" : siteConfig.site.name, "lastUpdated" : feedFormatter.format(new Date()), "authorName" : siteConfig.author.name, "authorEmail" : siteConfig.author.email, "entries" : feedEntries, "siteDomain" : siteConfig.site.domain]
