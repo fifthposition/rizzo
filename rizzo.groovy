@@ -23,7 +23,8 @@ if(!opt){
 } else {
     def posts = []
     def tags = []
-	SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMMM d, yyyy 'at' h:mm a")
+    SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy h:mm a")
+    SimpleDateFormat outputFormatter = new SimpleDateFormat("EEEE, MMMMM d, yyyy 'at' h:mm a")
     SimpleDateFormat archiveFormatter = new SimpleDateFormat("MMMMM d, yyyy")
     SimpleDateFormat feedFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
     SimpleDateFormat itemIdDateFormatter = new SimpleDateFormat("yyyy-MM-dd")
@@ -48,7 +49,7 @@ if(!opt){
 		if(currentPost.lastUpdated > lastPublished || !sourceExists){
 			def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "siteName" : siteConfig.site.name, "content" : currentPost.content, "authorName" : siteConfig.author.name, "lastUpdated" : """
 			<br />
-	        <p style="font-size:smaller; text-align:right;">(Updated ${formatter.format(currentPost.lastUpdated)})</p>"""]
+	        <p style="font-size:smaller; text-align:right;">(Updated ${outputFormatter.format(currentPost.lastUpdated)})</p>"""]
 			new File("${opt.d}/${name}.html").write("${fozziwig.createTemplate(page).make(scrooge)}")
         }
     }
@@ -78,7 +79,7 @@ if(!opt){
             }
         }
         if(currentPost.lastUpdated > lastPublished || !sourceExists){
-            def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : formatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name]
+            def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name]
             new File("${opt.d}/archives/${currentPost.name}.html").write("${fozziwig.createTemplate(post).make(scrooge)}")
         }
     }
