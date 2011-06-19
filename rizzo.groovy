@@ -65,7 +65,7 @@ if(!opt){
 	    def postTags = null
         if(!currentPost.tags.isEmpty()){
             postTags = "; "
-            postTags += currentPost.tags.sort{it.name}.collect{"<a href=\"/${it.name}/\">${it.name}</a>"}.join(", ")
+            postTags += currentPost.tags.sort{it.name}.collect{"<a href=\"/tags/${it.name}.html/\">${it.name}</a>"}.join(", ")
         }
         currentPost.tags.each { postTag ->
             def currentTag
