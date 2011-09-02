@@ -40,7 +40,12 @@ if(!opt){
 
     def sourceExists = new File("${opt.d}").exists()
     def siteConfig = new ConfigSlurper().parse(new File("${opt.s}/site-config.groovy").toURL())
-    def metadata = new ConfigSlurper().parse(new File("${opt.s}/meta.groovy").toURL())
+    def metadata
+
+    if(!new File("${opt.s}/meta.groovy").exists()){
+	    new File("${opt.s}/meta.groovy").write("published = \"${formatter.format(new Date())}\"")
+    }
+    metadata = new ConfigSlurper().parse(new File("${opt.s}/meta.groovy").toURL())
 
     Date lastPublished = formatter.parse(metadata.published)
 
