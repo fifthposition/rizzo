@@ -2,9 +2,7 @@ import java.text.SimpleDateFormat
 import groovy.text.SimpleTemplateEngine
 import com.petebevin.markdown.MarkdownProcessor
 
-@Grapes(
-    @Grab(group='com.madgag', module='markdownj-core', version='0.4.1')
-)
+@Grab('com.madgag:markdownj-core:0.4.1')
 
 class Post {
 	String title
