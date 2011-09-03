@@ -1,5 +1,6 @@
 site {
     domain = "www.replace.with.your.domain.com"
+	base = "" // use if the site should be relative to a top level domain - example: /mypath
     name = "The Name Of Your Site"
 }
 

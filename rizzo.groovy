@@ -70,7 +70,7 @@ if(!opt){
 	        pageText = pageText[2..-1]
 		    currentPost.content = pageText.join("\n")
     		if(currentPost.lastUpdated > lastPublished || !sourceExists){
-	    		def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "siteName" : siteConfig.site.name, "content" : currentPost.content, "authorName" : siteConfig.author.name, "lastUpdated" : """
+	    		def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "siteName" : siteConfig.site.name, "content" : currentPost.content, "authorName" : siteConfig.author.name, "base":siteConfig.site.base, "lastUpdated" : """
 			<br />
 	        <p style="font-size:smaller; text-align:right;">(Updated ${outputFormatter.format(currentPost.lastUpdated)})</p>"""]
 		    	new File("${opt.d}/${name}.html").write("${fozziwig.createTemplate(page).make(scrooge)}")
@@ -121,7 +121,7 @@ if(!opt){
                 }
             }
             if(currentPost.lastUpdated > lastPublished || !sourceExists){
-                def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name]
+                def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name, "base":siteConfig.site.base]
                 new File("${opt.d}/archives/${currentPost.name}.html").write("${fozziwig.createTemplate(post).make(scrooge)}")
             }
         }
@@ -154,7 +154,7 @@ if(!opt){
 	            }
     	    }
 	        if(currentPost.lastUpdated > lastPublished || !sourceExists){
-	            def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name]
+                def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name, "base":siteConfig.site.base]
 	            new File("${opt.d}/archives/${currentPost.name}.html").write("${fozziwig.createTemplate(post).make(scrooge)}")
     	    }
     	}
@@ -190,7 +190,7 @@ if(!opt){
 	             </table>
 	    """
 	
-	    def dickens = ["postTitle" : "Archives for &ldquo;${tag.name}&rdquo;", "postName" : tag.name, "siteName" : siteConfig.site.name, "postUpdate" : "", "authorName" : siteConfig.author.name, "content" : tagMid]
+	    def dickens = ["postTitle" : "Archives for &ldquo;${tag.name}&rdquo;", "postName" : tag.name, "siteName" : siteConfig.site.name, "postUpdate" : "", "authorName" : siteConfig.author.name, "content" : tagMid, "base": siteConfig.site.base]
 	
         new File("${opt.d}/tags/${tag.name}.html").write("${fozziwig.createTemplate(page).make(dickens)}")
         
@@ -199,10 +199,10 @@ if(!opt){
 		String entries = ""
 		tag.posts[0..max].each { cp ->
 		        def itemIdDate = itemIdDateFormatter.format(cp.dateCreated)
-			    def cratchit = ["postTitle" : cp.title, "postLink" : "http://${siteConfig.site.domain}/archives/${cp.name}.html", "postSummary" : cp.summary, "postContent" : cp.content, "itemId" : "tag:${siteConfig.site.domain},${itemIdDate}:/${cp.name}/", "itemDate" : feedFormatter.format(cp.dateCreated), "itemUpdatedDate" : feedFormatter.format(cp.lastUpdated)]
+			    def cratchit = ["postTitle" : cp.title, "postLink" : "http://${siteConfig.site.domain}${siteConfig.site.base}/archives/${cp.name}.html", "postSummary" : cp.summary, "postContent" : cp.content, "itemId" : "tag:${siteConfig.site.domain},${itemIdDate}:/${cp.name}/", "itemDate" : feedFormatter.format(cp.dateCreated), "itemUpdatedDate" : feedFormatter.format(cp.lastUpdated)]
                 entries += "${fozziwig.createTemplate(entry).make(cratchit)}"
 		}
-		def tim = ["siteDomain" : siteConfig.site.domain, "feedUrl" : "http://${siteConfig.site.domain}/tags/${tag.name}.xml", "tagName" : tag.name, "feedTitle" : "${siteConfig.site.name} : ${tag.name}", "siteName" : siteConfig.site.name, "lastUpdated" : feedFormatter.format(new Date()), "authorName" : siteConfig.author.name, "authorEmail" : siteConfig.author.email, "entries" : entries]
+		def tim = ["siteDomain" : siteConfig.site.domain, "feedUrl" : "http://${siteConfig.site.domain}${siteConfig.site.base}/tags/${tag.name}.xml", "tagName" : tag.name, "feedTitle" : "${siteConfig.site.name} : ${tag.name}", "siteName" : siteConfig.site.name, "lastUpdated" : feedFormatter.format(new Date()), "authorName" : siteConfig.author.name, "authorEmail" : siteConfig.author.email, "entries" : entries]
 		tagFeed.write("${fozziwig.createTemplate(feed).make(tim)}")
     }
 
@@ -216,11 +216,11 @@ if(!opt){
             postTags = "; "
             postTags += currentPost.tags.sort{it.name}.collect{"<a href=\"/${it.name}/\">${it.name}</a>"}.join(", ")
         }
-        def pd = ["postTitle" : currentPost.title, "postLink" : "http://${siteConfig.site.domain}/archives/${currentPost.name}.html", "postDate" : outputFormatter.format(currentPost.dateCreated), "postTags" : postTags ?: "", "content" : currentPost.content]
+        def pd = ["postTitle" : currentPost.title, "postLink" : "http://${siteConfig.site.domain}${siteConfig.site.base}/archives/${currentPost.name}.html", "postDate" : outputFormatter.format(currentPost.dateCreated), "postTags" : postTags ?: "", "content" : currentPost.content]
         homeContent += fozziwig.createTemplate(home_mid).make(pd)
     }
 
-    def fred = ["siteName" : siteConfig.site.name, "content" : homeContent, "authorName" : siteConfig.author.name]
+    def fred = ["siteName" : siteConfig.site.name, "content" : homeContent, "authorName" : siteConfig.author.name, "base":siteConfig.site.base]
     rootIndex.write("${fozziwig.createTemplate(home).make(fred)}")
     String tagList = "<p>"
     tagList += tags.sort{it.name}.collect{"<a href=\"/${it.name}/\">${it.name}</a>&nbsp;(${it.posts.size()})"}.join(" &nbsp; &nbsp; ")
@@ -243,18 +243,18 @@ if(!opt){
              <p></p>
              <table>
     """
-    def archive = ["postTitle" : "Archives", "postName" : "archives", "siteName" : siteConfig.site.name, "postUpdate" : "", "content" : archiveContent, "authorName" : siteConfig.author.name]
+    def archive = ["postTitle" : "Archives", "postName" : "archives", "siteName" : siteConfig.site.name, "postUpdate" : "", "content" : archiveContent, "authorName" : siteConfig.author.name, "base":siteConfig.site.base]
     arcIndex.write("${fozziwig.createTemplate(page).make(archive)}")
     def siteFeed = new File("${opt.d}/feed.xml")
     max = posts.size() > 20 ? 19 : posts.size() - 1
     String feedEntries = ""
 	posts[0..max].each { currentPost ->
 		def itemIdDate = itemIdDateFormatter.format(currentPost.dateCreated)
-		def cratchit = ["postTitle" : currentPost.title, "postSummary" : currentPost.summary, "postContent" : currentPost.content, "itemId" : "tag:${siteConfig.site.domain},${itemIdDate}:/archives/${currentPost.name}.html", "postLink" : "http://${siteConfig.site.domain}/archives/${currentPost.name}.html", "itemDate" : feedFormatter.format(currentPost.dateCreated), "itemUpdatedDate" : feedFormatter.format(currentPost.lastUpdated)]
+		def cratchit = ["postTitle" : currentPost.title, "postSummary" : currentPost.summary, "postContent" : currentPost.content, "itemId" : "tag:${siteConfig.site.domain},${itemIdDate}:/archives/${currentPost.name}.html", "postLink" : "http://${siteConfig.site.domain}${siteConfig.site.base}/archives/${currentPost.name}.html", "itemDate" : feedFormatter.format(currentPost.dateCreated), "itemUpdatedDate" : feedFormatter.format(currentPost.lastUpdated)]
         feedEntries += "${fozziwig.createTemplate(entry).make(cratchit)}"
     }
 
-    def feedBits = ["feedUrl" : "http://${siteConfig.site.domain}/feed.xml", "feedTitle" : siteConfig.site.name, "lastUpdated" : feedFormatter.format(new Date()), "authorName" : siteConfig.author.name, "authorEmail" : siteConfig.author.email, "entries" : feedEntries, "siteDomain" : siteConfig.site.domain]
+    def feedBits = ["feedUrl" : "http://${siteConfig.site.domain}${siteConfig.site.base}/feed.xml", "feedTitle" : siteConfig.site.name, "lastUpdated" : feedFormatter.format(new Date()), "authorName" : siteConfig.author.name, "authorEmail" : siteConfig.author.email, "entries" : feedEntries, "siteDomain" : siteConfig.site.domain]
     siteFeed.write("${fozziwig.createTemplate(feed).make(feedBits)}")
 
     new File("${opt.s}/meta.groovy").delete()
