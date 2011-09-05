@@ -171,6 +171,11 @@ if(!opt){
     	fileset(dir : "${opt.s}/images/")
     }
 
+    new File("${opt.d}/files/").mkdirs()
+    gonzo.copy(todir: "${opt.d}/files/") {
+    	fileset(dir : "${opt.s}/files/")
+    }
+
     new File("${opt.d}/tags/").mkdirs()
     tags.each{ tag ->
 	    tag.posts = tag.posts.sort{ it.dateCreated }.reverse()
