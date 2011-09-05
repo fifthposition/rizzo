@@ -70,9 +70,9 @@ if(!opt){
 	        pageText = pageText[2..-1]
 		    currentPost.content = pageText.join("\n")
     		if(currentPost.lastUpdated > lastPublished || !sourceExists){
-	    		def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "siteName" : siteConfig.site.name, "content" : currentPost.content, "authorName" : siteConfig.author.name, "base":siteConfig.site.base, "lastUpdated" : """
+	    		def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "content" : currentPost.content, "lastUpdated" : """
 			<br />
-	        <p style="font-size:smaller; text-align:right;">(Updated ${outputFormatter.format(currentPost.lastUpdated)})</p>"""]
+	        <p style="font-size:smaller; text-align:right;">(Updated ${outputFormatter.format(currentPost.lastUpdated)})</p>""", "config" : siteConfig]
 		    	new File("${opt.d}/${name}.html").write("${fozziwig.createTemplate(page).make(scrooge)}")
             }
         }
@@ -86,9 +86,9 @@ if(!opt){
 	        pageText = pageText[2..-1]
 		    currentPost.content = mdProcessor.markdown(pageText.join("\n"))
     		if(currentPost.lastUpdated > lastPublished || !sourceExists){
-	    		def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "siteName" : siteConfig.site.name, "content" : currentPost.content, "authorName" : siteConfig.author.name, "lastUpdated" : """
+	    		def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "content" : currentPost.content, "lastUpdated" : """
 			<br />
-	        <p style="font-size:smaller; text-align:right;">(Updated ${outputFormatter.format(currentPost.lastUpdated)})</p>"""]
+	        <p style="font-size:smaller; text-align:right;">(Updated ${outputFormatter.format(currentPost.lastUpdated)})</p>""", "config" : siteConfig]
 		    	new File("${opt.d}/${name}.html").write("${fozziwig.createTemplate(page).make(scrooge)}")
             }
         }
@@ -121,7 +121,7 @@ if(!opt){
                 }
             }
             if(currentPost.lastUpdated > lastPublished || !sourceExists){
-                def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name, "base":siteConfig.site.base]
+                def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "postTags" : postTags ?: "", "content" : currentPost.content, "config" : siteConfig]
                 new File("${opt.d}/archives/${currentPost.name}.html").write("${fozziwig.createTemplate(post).make(scrooge)}")
             }
         }
@@ -154,7 +154,7 @@ if(!opt){
 	            }
     	    }
 	        if(currentPost.lastUpdated > lastPublished || !sourceExists){
-                def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "siteName" : siteConfig.site.name, "postTags" : postTags ?: "", "content" : currentPost.content, "authorName" : siteConfig.author.name, "base":siteConfig.site.base]
+                def scrooge = ["postTitle" : currentPost.title, "postName" : currentPost.name, "postDate" : outputFormatter.format(currentPost.dateCreated), "postTags" : postTags ?: "", "content" : currentPost.content, "config" : siteConfig]
 	            new File("${opt.d}/archives/${currentPost.name}.html").write("${fozziwig.createTemplate(post).make(scrooge)}")
     	    }
     	}
@@ -195,7 +195,7 @@ if(!opt){
 	             </table>
 	    """
 	
-	    def dickens = ["postTitle" : "Archives for &ldquo;${tag.name}&rdquo;", "postName" : tag.name, "siteName" : siteConfig.site.name, "postUpdate" : "", "authorName" : siteConfig.author.name, "content" : tagMid, "base": siteConfig.site.base]
+	    def dickens = ["postTitle" : "Archives for &ldquo;${tag.name}&rdquo;", "postName" : tag.name, "postUpdate" : "", "content" : tagMid, "config": siteConfig]
 	
         new File("${opt.d}/tags/${tag.name}.html").write("${fozziwig.createTemplate(page).make(dickens)}")
         
@@ -225,12 +225,12 @@ if(!opt){
         homeContent += fozziwig.createTemplate(home_mid).make(pd)
     }
 
-    def fred = ["siteName" : siteConfig.site.name, "content" : homeContent, "authorName" : siteConfig.author.name, "base":siteConfig.site.base]
+    def fred = ["content" : homeContent, "config" :siteConfig]
     rootIndex.write("${fozziwig.createTemplate(home).make(fred)}")
     String tagList = "<p>"
     tagList += tags.sort{it.name}.collect{"<a href=\"/${it.name}/\">${it.name}</a>&nbsp;(${it.posts.size()})"}.join(" &nbsp; &nbsp; ")
     tagList += "</p>"
-    def thingsNSuch = ["postTitle" : "Tags", "postName" : "tags", "siteName" : siteConfig.site.name, "authorName" : siteConfig.author.name, "postUpdate" : "", "content" : tagList]
+    def thingsNSuch = ["postTitle" : "Tags", "postName" : "tags", "config" : siteConfig, "postUpdate" : "", "content" : tagList]
     new File("${opt.d}/tags.html").write("${fozziwig.createTemplate(page).make(thingsNSuch)}")
     new File("${opt.d}/archives/").mkdirs()
     File arcIndex = new File("${opt.d}/archives.html")
@@ -248,7 +248,7 @@ if(!opt){
              <p></p>
              <table>
     """
-    def archive = ["postTitle" : "Archives", "postName" : "archives", "siteName" : siteConfig.site.name, "postUpdate" : "", "content" : archiveContent, "authorName" : siteConfig.author.name, "base":siteConfig.site.base]
+    def archive = ["postTitle" : "Archives", "postName" : "archives", "postUpdate" : "", "content" : archiveContent, "config" : siteConfig]
     arcIndex.write("${fozziwig.createTemplate(page).make(archive)}")
     def siteFeed = new File("${opt.d}/feed.xml")
     max = posts.size() > 20 ? 19 : posts.size() - 1
